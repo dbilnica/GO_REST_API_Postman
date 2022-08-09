@@ -15,15 +15,15 @@ Postman
 Newman
 --------------------
 #### Files
-* Go_REST_API-2022-08-09-11-04-52-131-0
+* Go_REST_API-2022-08-09-12-31-23-111-0
 
 Public Postman Collection
 --------------------
-* [Go_REST_API_PublicWorkspace](https://www.postman.com/david-cngroup/workspace/public-go-rest-api/collection/22590375-034da0f8-fa9b-429f-adaf-264f7078b0cd?action=share&creator=22590375)
+* [Go_REST_API_PublicWorkspace](https://www.postman.com/david-cngroup/workspace/public-go-rest-api/collection/22590375-0527e5cc-461c-4f03-aa22-51a41236790d?action=share&creator=22590375)
 
 #### Running a Newman
 ```shell
-$ newman run https://www.getpostman.com/collections/e91b265ba709eb1557df -e '.\GO_REST_API Environment.postman_environment.json' -n 2 -r htmlextra
+$ newman run https://www.getpostman.com/collections/30133ce98048dcf5c73d -e '.\GO_REST_API Environment.postman_environment.json' -n 2 -r htmlextra
 ```
 
 Created with ❤️ David Bilnica 2022

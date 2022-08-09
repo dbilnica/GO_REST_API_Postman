@@ -45,6 +45,15 @@
 									"\r",
 									"pm.globals.set(\"user_Id\", userId);\r",
 									"pm.collectionVariables.set(\"email\", userEmail);\r",
+									"\r",
+									"pm.test(\"Response test\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -705,6 +714,16 @@
 									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
 									"});\r",
 									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response test\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name_edited\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -964,8 +983,15 @@
 									"\r",
 									"const response = pm.response.json();\r",
 									"const postsId = response.id;\r",
-									"//console.log(user_Id);\r",
 									"pm.globals.set(\"posts_Id\", postsId);\r",
+									"\r",
+									"pm.test(\"Response test\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response.user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.title).to.eql(pm.collectionVariables.get(\"title\"));\r",
+									"    pm.expect(response.body).to.eql(pm.collectionVariables.get(\"body\"));\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -1297,6 +1323,16 @@
 									"pm.test(\"Transfer-Encoding is present\", () => {\r",
 									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
 									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response test\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.post_id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name_comments\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email_comments\"));\r",
+									"    pm.expect(response.body).to.eql(pm.collectionVariables.get(\"body_comments\"));\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1766,7 +1802,14 @@
 									"const response = pm.response.json();\r",
 									"const dueOn = response.due_on;\r",
 									"\r",
-									"pm.globals.set(\"due_On\", dueOn);"
+									"pm.globals.set(\"due_On\", dueOn);\r",
+									"\r",
+									"pm.test(\"Response test\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.title).to.eql(pm.collectionVariables.get(\"title_todos\"));\r",
+									"    pm.expect(response.due_on).to.eql(pm.globals.get(\"due_On\"));\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -2092,12 +2135,13 @@
 									"});\r",
 									"\r",
 									"const response = pm.response.json();\r",
-									"const dueOnBlank = response.due_on;\r",
 									"\r",
-									"pm.test(\"Due-on is blank\", () => {\r",
-									"    pm.expect(dueOnBlank).to.eql(null);\r",
-									"});\r",
-									""
+									"pm.test(\"Todo found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.title).to.eql(pm.collectionVariables.get(\"title_todos\"));\r",
+									"    pm.expect(response.due_on).to.eql(null);\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
