@@ -1,0 +1,2517 @@
+{
+	"info": {
+		"_postman_id": "fa2d380c-d648-4554-ba97-4519ad072550",
+		"name": "Go_REST_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22590375"
+	},
+	"item": [
+		{
+			"name": "API_01_UserRequests",
+			"item": [
+				{
+					"name": "API_POST_CreateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const userId = response.id;\r",
+									"const userEmail = response.email;\r",
+									"\r",
+									"pm.globals.set(\"user_Id\", userId);\r",
+									"pm.collectionVariables.set(\"email\", userEmail);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"jan.novotny{{$randomInt}}@seznam.cz\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"User found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Same_Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const duplicateEmailField = response[0].field;\r",
+									"const duplicateEmailMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Email has been already taken\", () => {\r",
+									"    pm.expect(duplicateEmailField).to.eql(\"email\");\r",
+									"    pm.expect(duplicateEmailMessage).to.eql(\"has already been taken\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Invalid_Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const duplicateEmailField = response[0].field;\r",
+									"const duplicateEmailMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Email is invalid\", () => {\r",
+									"    pm.expect(duplicateEmailField).to.eql(\"email\");\r",
+									"    pm.expect(duplicateEmailMessage).to.eql(\"is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"shouldbeinvalid\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Blank_Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const nameBlankField = response[0].field;\r",
+									"const nameBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Name is blank\", () => {\r",
+									"    pm.expect(nameBlankField).to.eql(\"name\");\r",
+									"    pm.expect(nameBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"email\": \"jan.novotny{{$randomInt}}@seznam.cz\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Blank_Gender",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const genderBlankField = response[0].field;\r",
+									"const genderBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Gender is blank\", () => {\r",
+									"    pm.expect(genderBlankField).to.eql(\"gender\");\r",
+									"    pm.expect(genderBlankMessage).to.eql(\"can't be blank, can be male or female\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"jan.novotny{{$randomInt}}@seznam.cz\",\r\n    \"gender\": \"\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Blank_Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const statusBlankField = response[0].field;\r",
+									"const statusBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Gender is blank\", () => {\r",
+									"    pm.expect(statusBlankField).to.eql(\"status\");\r",
+									"    pm.expect(statusBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"jan.novotny{{$randomInt}}@seznam.cz\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateUser_Blank_Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const emailBlankField = response[0].field;\r",
+									"const emailBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Email is blank\", () => {\r",
+									"    pm.expect(emailBlankField).to.eql(\"email\");\r",
+									"    pm.expect(emailBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetUser_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"User found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API_02_NameUpdateRequests",
+			"item": [
+				{
+					"name": "API_GET_Name_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"User found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_PATCH_UpdateUserName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name_edited}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_Rename_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Renamed user found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name_edited\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_PATCH_UpdateUserName_Blank_Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const nameBlankField = response[0].field;\r",
+									"const nameBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Name is blank\", () => {\r",
+									"    pm.expect(nameBlankField).to.eql(\"name\");\r",
+									"    pm.expect(nameBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_Name_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Renamed user found\", () => {\r",
+									"    pm.expect(response).to.be.an('object');\r",
+									"    pm.expect(response.id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response.name).to.eql(pm.collectionVariables.get(\"name_edited\"));\r",
+									"    pm.expect(response.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"    pm.expect(response.gender).to.eql(pm.collectionVariables.get(\"gender\"));\r",
+									"    pm.expect(response.status).to.eql(pm.collectionVariables.get(\"status\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API_03_PostsRequests",
+			"item": [
+				{
+					"name": "API_POST_CreatePost",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const postsId = response.id;\r",
+									"//console.log(user_Id);\r",
+									"pm.globals.set(\"posts_Id\", postsId);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{title}}\",\r\n    \"body\": \"{{body}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetPosts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Post found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response[0].user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response[0].title).to.eql(pm.collectionVariables.get(\"title\"));\r",
+									"    pm.expect(response[0].body).to.eql(pm.collectionVariables.get(\"body\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreatePost_Blank_Title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const titleBlankField = response[0].field;\r",
+									"const titleBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Title is blank\", () => {\r",
+									"    pm.expect(titleBlankField).to.eql(\"title\");\r",
+									"    pm.expect(titleBlankMessage).to.eql(\"can't be blank\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"\",\r\n    \"body\": \"{{body}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreatePost_Blank_Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const bodyBlankField = response[0].field;\r",
+									"const bodyBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Body is blank\", () => {\r",
+									"    pm.expect(bodyBlankField).to.eql(\"body\");\r",
+									"    pm.expect(bodyBlankMessage).to.eql(\"can't be blank\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{title}}\",\r\n    \"body\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetPosts_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Post found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response[0].user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response[0].title).to.eql(pm.collectionVariables.get(\"title\"));\r",
+									"    pm.expect(response[0].body).to.eql(pm.collectionVariables.get(\"body\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API_04_CommentsRequests",
+			"item": [
+				{
+					"name": "API_POST_CreateComments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name_comments}}\",\r\n    \"email\": \"{{email_comments}}\",\r\n    \"body\": \"{{body_comments}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetComments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Comment found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].post_id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response[0].name).to.eql(pm.collectionVariables.get(\"name_comments\"));\r",
+									"    pm.expect(response[0].email).to.eql(pm.collectionVariables.get(\"email_comments\"));\r",
+									"    pm.expect(response[0].body).to.eql(pm.collectionVariables.get(\"body_comments\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateComments_Blank_Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const nameBlankField = response[0].field;\r",
+									"const nameBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Name is blank\", () => {\r",
+									"    pm.expect(nameBlankField).to.eql(\"name\");\r",
+									"    pm.expect(nameBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"email\": \"{{email_comments}}\",\r\n    \"body\": \"{{body_comments}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateComments_Blank_Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const bodyBlankField = response[0].field;\r",
+									"const bodyBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Body is blank\", () => {\r",
+									"    pm.expect(bodyBlankField).to.eql(\"body\");\r",
+									"    pm.expect(bodyBlankMessage).to.eql(\"can't be blank\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name_comments}}\",\r\n    \"email\": \"{{email_comments}}\",\r\n    \"body\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateComments_Blank_Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const emailBlankField = response[0].field;\r",
+									"const emailBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Email is blank\", () => {\r",
+									"    pm.expect(emailBlankField).to.eql(\"email\");\r",
+									"    pm.expect(emailBlankMessage).to.eql(\"can't be blank, is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name_comments}}\",\r\n    \"email\": \"\",\r\n    \"body\": \"{{body_comments}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateComments_Invalid_Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const emailInvalidField = response[0].field;\r",
+									"const emailInvalidMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Email is invalid\", () => {\r",
+									"    pm.expect(emailInvalidField).to.eql(\"email\");\r",
+									"    pm.expect(emailInvalidMessage).to.eql(\"is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name_comments}}\",\r\n    \"email\": \"shouldbeinvalid\",\r\n    \"body\": \"{{body_comments}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetComments_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Comment found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].post_id).to.eql(pm.globals.get(\"posts_Id\"));\r",
+									"    pm.expect(response[0].name).to.eql(pm.collectionVariables.get(\"name_comments\"));\r",
+									"    pm.expect(response[0].email).to.eql(pm.collectionVariables.get(\"email_comments\"));\r",
+									"    pm.expect(response[0].body).to.eql(pm.collectionVariables.get(\"body_comments\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/posts/{{posts_Id}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{posts_Id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API_05_TodoRequests",
+			"item": [
+				{
+					"name": "API_POST_CreateTodo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const dueOn = response.due_on;\r",
+									"\r",
+									"pm.globals.set(\"due_On\", dueOn);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{title_todos}}\",\r\n    \"due_on\": \"{{$randomDateFuture}}\",\r\n    \"status\": \"{{status_todos}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetUserTodos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Todo found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response[0].title).to.eql(pm.collectionVariables.get(\"title_todos\"));\r",
+									"    pm.expect(response[0].due_on).to.eql(pm.globals.get(\"due_On\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateTodo_Blank_Title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const titleBlankField = response[0].field;\r",
+									"const titleBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Title is blank\", () => {\r",
+									"    pm.expect(titleBlankField).to.eql(\"title\");\r",
+									"    pm.expect(titleBlankMessage).to.eql(\"can't be blank\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"\",\r\n    \"due_on\": \"{{$randomDateFuture}}\",\r\n    \"status\": \"{{status_todos}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateTodo_Blank_Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Unprocessable Entity POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([422]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const statusBlankField = response[0].field;\r",
+									"const statusBlankMessage = response[0].message;\r",
+									"\r",
+									"pm.test(\"Status is blank\", () => {\r",
+									"    pm.expect(statusBlankField).to.eql(\"status\");\r",
+									"    pm.expect(statusBlankMessage).to.eql(\"can't be blank, can be pending or completed\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{title_todos}}\",\r\n    \"due_on\": \"{{$randomDateFuture}}\",\r\n    \"status\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetUserTodos_Check_BeforeDueOn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Todo found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response[0].title).to.eql(pm.collectionVariables.get(\"title_todos\"));\r",
+									"    pm.expect(response[0].due_on).to.eql(pm.globals.get(\"due_On\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_POST_CreateTodo_Blank_DueOn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const dueOnBlank = response.due_on;\r",
+									"\r",
+									"pm.test(\"Due-on is blank\", () => {\r",
+									"    pm.expect(dueOnBlank).to.eql(null);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{title_todos}}\",\r\n    \"due_on\": \"\",\r\n    \"status\": \"{{status_todos}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_GetUserTodos_Check_AfterDueOn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Todo found\", () => {\r",
+									"    pm.expect(response[0]).to.be.an('object');\r",
+									"    pm.expect(response[0].user_id).to.eql(pm.globals.get(\"user_Id\"));\r",
+									"    pm.expect(response[0].title).to.eql(pm.collectionVariables.get(\"title_todos\"));\r",
+									"    pm.expect(response[0].due_on).to.eql(null);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API_06_RemoveRequests",
+			"item": [
+				{
+					"name": "API_DEL_RemoveUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 204\", () => {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_Remove_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 404 - Not found\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"User not found\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Resource not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_DEL_RemoveUser_Same_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 404 Not Found\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const message = response.message;\r",
+									"\r",
+									"pm.test(\"Resource not found\", () => {\r",
+									"    pm.expect(message).to.eql(\"Resource not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API_GET_Remove_Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 404 - Not found\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection - keep alive is present\", () => {\r",
+									"    pm.response.to.have.header(\"Connection\");\r",
+									"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", () => {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding is present\", () => {\r",
+									"    pm.response.to.have.header(\"Transfer-Encoding\");\r",
+									"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"User not found\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Resource not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_Id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_Id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{access-token}}",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "query",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "access-token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://gorest.co.in/public/v2"
+		},
+		{
+			"key": "name",
+			"value": "Jan Novotny",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "jan.novotny447@seznam.cz",
+			"type": "string"
+		},
+		{
+			"key": "gender",
+			"value": "male",
+			"type": "string"
+		},
+		{
+			"key": "status",
+			"value": "active",
+			"type": "string"
+		},
+		{
+			"key": "name_edited",
+			"value": "Jan Slansky",
+			"type": "string"
+		},
+		{
+			"key": "title",
+			"value": "Neque porro quisquam",
+			"type": "string"
+		},
+		{
+			"key": "body",
+			"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis gravida nisl a massa cursus, in accumsan risus suscipit. Aenean ullamcorper suscipit libero, sed interdum orci dictum ut. Praesent nunc mauris, tempor vel dolor cursus, dignissim volutpat massa. Etiam ut congue neque. Morbi lorem orci, tincidunt quis magna non, mollis commodo nisi. Nam tincidunt, felis vitae elementum consectetur, tellus sem tempor nunc, vel faucibus mauris tellus nec ipsum.",
+			"type": "string"
+		},
+		{
+			"key": "title_edited",
+			"value": "Suspendisse finibus eget ipsum id tempor",
+			"type": "string"
+		},
+		{
+			"key": "body_edited",
+			"value": "Sed pharetra massa et eros luctus gravida. Donec eu augue ut turpis porttitor pharetra. Etiam euismod mollis risus. Vestibulum euismod lacus mauris, eu aliquam nunc venenatis et. Sed ultricies bibendum ligula, vel efficitur odio consectetur eu. Vestibulum nec nibh leo. Donec semper varius nunc, nec auctor risus fringilla eget.",
+			"type": "string"
+		},
+		{
+			"key": "email_comments",
+			"value": "petr.uskocil@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "name_comments",
+			"value": "Petr Uskocil",
+			"type": "string"
+		},
+		{
+			"key": "body_comments",
+			"value": "Morbi iaculis tempus consectetur. Integer vitae finibus enim. Maecenas imperdiet tellus diam, blandit hendrerit tortor fringilla sed. Quisque in augue scelerisque, condimentum justo ut, bibendum nulla. Aliquam erat volutpat. Nullam a dapibus nulla. Pellentesque leo elit, laoreet in purus consectetur, tempor vehicula nibh",
+			"type": "string"
+		},
+		{
+			"key": "status_todos",
+			"value": "completed",
+			"type": "string"
+		},
+		{
+			"key": "title_todos",
+			"value": "Suspendisse tincidunt purus vitae cursus rutrum",
+			"type": "string"
+		}
+	]
+}
